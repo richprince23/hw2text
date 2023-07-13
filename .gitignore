@@ -48,3 +48,6 @@ app.*.map.json
 /macos/
 /windows/
 /web/
+
+#ignore env files
+/lib/env.dart
