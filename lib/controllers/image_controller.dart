@@ -11,14 +11,14 @@ class Utils {
   /// function to get image via camera with filepicker
   static Future<File?> getImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return null;
     final File file = File(pickedFile.path);
     return file;
   }
 
   /// function to crop picked image with image_cropper
-  Future<CroppedFile?> cropImage(File file) async {
+  static Future<CroppedFile?> cropImage(File file) async {
     final croppedFile = await ImageCropper.platform.cropImage(
       sourcePath: file.path,
       aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
@@ -48,10 +48,10 @@ class Utils {
   }
 
   ///clear selected image
-  void clearImage() {}
+  static void clearImage() {}
 
   ///convert selected image to base64
-  Future<String> encodeImageFileToBase64(File file) async {
+  static Future<String> encodeImageFileToBase64(File file) async {
     final bytes = await file.readAsBytes();
     final base64String = base64Encode(bytes);
     return base64String;
