@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 // Function to recognize handwritten numbers using GPT-3
@@ -17,14 +19,15 @@ class Api {
         'text': imageData,
       };
 
+      final requestBodyJson = json.encode(requestBody);
       // Make the API request to GPT-3
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
         },
-        body: requestBody,
+        body: requestBodyJson,
       );
 
       print('Response status: ${response.body}');
@@ -37,6 +40,4 @@ class Api {
       return null;
     }
   }
-
-
 }
