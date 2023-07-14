@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hw2text/controllers/api.dart';
 import 'package:hw2text/controllers/image_controller.dart';
@@ -42,7 +44,8 @@ class _MainScreenState extends State<MainScreen> {
                   Utils.getImage()
                       .then((value) => Utils.cropImage(value!))
                       .then((value) =>
-                          Api.recognizeHandwrittenNumber(value!.path))
+                          Utils.encodeImageFileToBase64(File(value!.path)))
+                      .then((value) => Api.recognizeHandwrittenNumber(value))
                       .then((value) => setState(() {
                             detectedNumber = value;
                           }));

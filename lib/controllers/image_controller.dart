@@ -54,6 +54,7 @@ class Utils {
   static Future<String> encodeImageFileToBase64(File file) async {
     final bytes = await file.readAsBytes();
     final base64String = base64Encode(bytes);
+    print("image DATA = $base64String");
     return base64String;
   }
 }
