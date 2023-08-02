@@ -10,13 +10,14 @@ class Api {
     try {
       // Prepare the API request payload
       final requestBody = {
-        'prompt': 'Recognize the handwritten number:',
+        'prompt':
+            'Recognize the handwritten number from this image:' + imageData,
         'max_tokens': 1,
         'temperature': 0.8,
         'top_p': 1,
         'n': 1,
         'stop': ['\n'],
-        'text': imageData,
+        // 'text': imageData,
       };
 
       final requestBodyJson = json.encode(requestBody);
@@ -25,7 +26,7 @@ class Api {
         Uri.parse(apiUrl),
         headers: {
           'Authorization': 'Bearer $apiKey',
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: requestBodyJson,
       );
@@ -39,5 +40,35 @@ class Api {
       print('Error recognizing handwritten number: $error');
       return null;
     }
+  }
+
+  static Future<String?> recognizeText(String imageData) async {
+    var headers = {'apikey': 'K88935604788957'};
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://api.ocr.space/parse/image'));
+    request.fields.addAll({
+      'language': 'eng',
+      'isOverlayRequired': 'false',
+      'iscreatesearchablepdf': 'false',
+      'issearchablepdfhidetextlayer': 'false',
+      'base64image': 'data:image/jpeg;base64,$imageData'
+    });
+
+    request.headers.addAll(headers);
+
+    var response = await request.send();
+    final respStr;
+
+    if (response.statusCode == 200) {
+      respStr = await response.stream.bytesToString();
+    } else {
+      respStr = response.reasonPhrase;
+    }
+
+    // Use the response data as needed, for example:
+    print(respStr);
+
+    // Return the response string or do other processing here.
+    return respStr;
   }
 }

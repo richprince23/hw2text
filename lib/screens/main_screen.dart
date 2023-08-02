@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,19 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Utils.clearImage();
+  }
+
   XFile? _image;
   CroppedFile? _croppedFile;
   String? detectedNumber;
@@ -29,7 +43,8 @@ class _MainScreenState extends State<MainScreen> {
             flex: 8,
             child: Container(
               child: Center(
-                child: Text(detectedNumber ?? "Nothing detected"),
+                child: Text(detectedNumber ?? "Nothing detected",
+                    style: TextStyle(fontSize: 30)),
               ),
             ),
           ),
@@ -45,10 +60,17 @@ class _MainScreenState extends State<MainScreen> {
                       .then((value) => Utils.cropImage(value!))
                       .then((value) =>
                           Utils.encodeImageFileToBase64(File(value!.path)))
-                      .then((value) => Api.recognizeHandwrittenNumber(value))
-                      .then((value) => setState(() {
-                            detectedNumber = value;
-                          }));
+                      .then((value) => Api.recognizeText(value))
+                      .then(
+                        (value) => setState(
+                          () {
+                            Map<String, dynamic> responseMap =
+                                json.decode(value!);
+                            detectedNumber =
+                                responseMap['ParsedResults'][0]['ParsedText'];
+                          },
+                        ),
+                      );
                 },
                 child: const Text('Take a photo'),
               ),
